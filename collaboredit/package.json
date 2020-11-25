@@ -25,7 +25,9 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "react-dom": "^17.0.1",
+    "react-router-dom": "^5.2.0",
+    "rebass": "^4.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
