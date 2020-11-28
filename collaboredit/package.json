@@ -26,10 +26,14 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/rebass": "^4.0.7",
+    "@types/ws": "^7.4.0",
+    "automerge": "^0.14.1",
+    "express": "^4.17.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
-    "rebass": "^4.0.7"
+    "rebass": "^4.0.7",
+    "ws": "^7.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
