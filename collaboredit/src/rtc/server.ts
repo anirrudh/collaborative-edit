@@ -1,14 +1,17 @@
-import * as Automerge from 'automerge';
 import express from 'express';
-import * as ws from "WebSocket";
+import * as ws from "ws";
+import { rtcserverValues } from '../common/interfaces';
 
-const HOST = '0.0.0.0'
-const PORT = 9876
-const app = express();
+const conf: rtcserverValues = {
+	HOST: '0.0.0.0',
+	PORT: 9876,
+	wssPORT: 8090
+}
 
-app.get('/', (req, res) => res.send('Express + TypeScript Server'));
-app.listen(PORT, () => {
-  console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);
+const rtcs = express();
+const wss = new ws.Server({port: conf.wssPORT })
+console.log(`Websocket Server initializaed at ${conf.PORT}`);
+rtcs.get('/', (req: any, res: any) => res.send('Express + TypeScript Server'));
+rtcs.listen(conf.PORT, () => {
+console.log(`⚡️[server]: Server is running at https://localhost:${conf.PORT}`);
 });
-
-
