@@ -1,4 +1,4 @@
-import express from 'express';
+import * as Automerge from 'automerge'; 
 import * as ws from "ws";
 import { rtcserverValues } from '../common/interfaces';
 
@@ -8,10 +8,14 @@ const conf: rtcserverValues = {
 	wssPORT: 8090
 }
 
-const rtcs = express();
-const wss = new ws.Server({port: conf.wssPORT })
-console.log(`Websocket Server initializaed at ${conf.PORT}`);
-rtcs.get('/', (req: any, res: any) => res.send('Express + TypeScript Server'));
-rtcs.listen(conf.PORT, () => {
-console.log(`⚡️[server]: Server is running at https://localhost:${conf.PORT}`);
-});
+const wss = new ws.Server({port: conf.wssPORT})
+const doc = Automerge.init()
+
+console.log(doc)
+
+// This is kind of like the staging platform
+// for changes to be staged and then computed later 
+currDoc = Automerge.change(doc, 'first message', doc => {
+  doc.text = new Automerge.Text()
+  doc.text.insertAt(0, 'h', 'e', 'l', 'l', 'o')
+})
