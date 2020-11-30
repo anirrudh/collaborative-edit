@@ -1,9 +1,14 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
-  entry: './src/',
+  entry: './src/index.tsx',
+  resolve: {
+    alias: {
+	    'ws': path.resolve(path.join(__dirname, 'node_modules/ws/index.js' )) // fix for https://github.com/websockets/ws/issues/1538
+  }},
+
   module: {
-    rules: [
+       rules: [
       {
         test: /\.tsx?$/,
         use: {
@@ -28,6 +33,12 @@ module.exports = {
     publicPath: '/'
   },
     devServer: {
+    proxy: {
+	'/websocket': {
+		target: 'ws://localhost:8090',
+		ws: true
+	},
+    },
     contentBase: path.join(__dirname, 'dist'),
     port: 9000,
     historyApiFallback: true,

@@ -8,14 +8,23 @@ const conf: rtcserverValues = {
 	wssPORT: 8090
 }
 
-const wss = new ws.Server({port: conf.wssPORT})
-const doc = Automerge.init()
-
-console.log(doc)
-
+export function test_automerge() {
+//const wss = new ws.Server({port: conf.wssPORT});
+let currentDoc = Automerge.init();
+console.log(currentDoc);
 // This is kind of like the staging platform
 // for changes to be staged and then computed later 
-currDoc = Automerge.change(doc, 'first message', doc => {
-  doc.text = new Automerge.Text()
-  doc.text.insertAt(0, 'h', 'e', 'l', 'l', 'o')
-})
+let newDoc = Automerge.change(currentDoc, 'first message', doc => {
+  doc.text = new Automerge.Text();
+  doc.text.insertAt(0, 'h', 'e', 'l', 'l', 'o');
+});
+console.log(currentDoc);
+
+let changes = Automerge.getChanges(currentDoc, newDoc);
+console.log(changes);
+};
+
+export function test_wss() {
+	const wss = new ws.Server({port: 8090});
+	console.log(`⚡️[server]: Server is running at https://localhost:8090`);
+};
