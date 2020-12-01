@@ -5,8 +5,9 @@
   "module": "ES2015",
   "main": "index.js",
   "scripts": {
-   "start": "webpack serve --config webpack.config.js" ,
-    "start:server": "./node_modules/bin/ts-node ./src/rtc/index.ts",
+   "start:frontend": "webpack serve --config webpack.config.js" ,
+    "start:server": "ts-node ./src/rtc/index.ts",
+    "dev": "ts-node ./src/rtc/index.ts & webpack serve --config webpack.config.js",
     "build": "webpack -config webpack.config.js && webpack --config webpack.server.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
