@@ -1,13 +1,13 @@
-import { Server } from 'ws';
+import { Server } from "ws";
 /*
  * This interface defines the group of definitions
  * that the rtc sever will use in order to talk
  * with other clients.
  */
 interface rtcserverValues {
-	HOST: string; 
-	PORT: number;
-	wssPORT: number;
+  HOST: string;
+  PORT: number;
+  wssPORT: number;
 }
 
 export { rtcserverValues };
@@ -18,8 +18,7 @@ export { rtcserverValues };
  * different widgets in the ecosystem
  */
 interface rtcServer {
-	wss: Server;
+  wss: Server;
 }
 
-export { rtcServer }; 
-    
+export { rtcServer };
