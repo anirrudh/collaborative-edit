@@ -5,7 +5,7 @@ import Home from './home';
 import { Flex, Text, Box, Link as RebassLink } from 'rebass';
 import { Link, Switch, Route } from "react-router-dom";
 
-const Navbar = (props) => {
+const Navbar = (props: any) => {
 	return (
 	<div>
 	<Flex

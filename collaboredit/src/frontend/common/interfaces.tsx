@@ -1,5 +1,4 @@
 import { Server } from 'ws';
-import express from 'express';
 /*
  * This interface defines the group of definitions
  * that the rtc sever will use in order to talk
@@ -20,7 +19,6 @@ export { rtcserverValues };
  */
 interface rtcServer {
 	wss: Server;
-	rtcs: express;
 }
 
 export { rtcServer }; 
