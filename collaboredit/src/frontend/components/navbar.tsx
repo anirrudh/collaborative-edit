@@ -22,19 +22,21 @@ const Navbar = (props: any) => {
           p={2}
           variant="nav"
           to="/research"
-        />
-        <Research />
-        <RebassLink {...props} as={Link} color="white" p={2} to="/about" />
-        <About />
+        >
+          Research
+        </RebassLink>
+        <RebassLink {...props} as={Link} color="white" p={2} to="/about">
+          About
+        </RebassLink>
         <RebassLink
           {...props}
           as={Link}
           color="white"
           p={2}
           to="/simple_editor"
-        />
-
-        <SimpleEditor />
+        >
+          Simple Editor
+        </RebassLink>
       </Flex>
       {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
