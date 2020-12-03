@@ -17,6 +17,17 @@ export function test_automerge() {
  * empty document.
  */
 export const init_am_doc = () => {
+ 	return Automerge.init();
+}
+
+// Do a new text document for automerge speed
+export const init_am_doc_text = () => {
+	return new Automerge.Text();
+}
+
+// Get the changes in state between the new document and the old one
+export const changes_am_doc = (oldDoc: any, newDoc: any) => {
+	return Automerge.getChanges(oldDoc, newDoc);
 }
 /*
  * This function takes in exactly one character
@@ -27,11 +38,10 @@ export const init_am_doc = () => {
  * Messages will be unique to the node that they are spawned from
  * and as a result will contain the ActorID as part of the signature. 
  */
-export function capture_character_input(currentDoc: any, text_char: any) {	
-	var insertion_index = currentDoc.text.length; 
-	var msg = Automerge.getActorId(currentDoc) + " - adding a new commit!";
-	let newDoc = Automerge.change(currentDoc, msg, (doc: any) => {
-		doc.text.insertAt(insertion_index, text_char);
+export function capture_character_input(currentDoc: any, text_char: any, insertion_index: number) {	
+//	var msg = Automerge.getActorId(currentDoc) + " - adding a new commit!";
+	return Automerge.change(currentDoc, 'suh', (doc: any) => {
+		doc.text = new Automerge.Text();
+		doc.text.insertAt(insertion_index  - 1, text_char);
 	});
-	console.log("New Document :" + newDoc);
 }

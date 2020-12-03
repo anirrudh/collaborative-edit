@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { test_automerge, capture_character_input } from "../../rtc/capture";
+import { test_automerge, init_am_doc, init_am_doc_text, capture_character_input } from "../../rtc/capture";
 import { Box, Button } from "rebass";
 import { Label, Textarea } from "@rebass/forms";
 
@@ -8,6 +8,8 @@ const SimpleEditor = (props: any) => {
   const [text, setText] = useState(null);
   const [textLen, setTextLen] = useState(0);
   const [lastChar, setLastChar] = useState(null);
+  const [currentDoc, setCurrentDoc] = useState({});            // Current Doc (refactor out)
+  const [changedDoc, setChangedDoc] = useState({}); 	  // Doc compiled with changes
 
   const handleText = (event: React.ChangeEvent) => {
     // Algo to check if charater was added or not
@@ -16,15 +18,19 @@ const SimpleEditor = (props: any) => {
     console.log(prevLen, currLen);
     if (prevLen < currLen) {
 	setText(event.target.value); 
-	// TODO: Set the character in the doc changes here.
-	console.log("Current length higher than previous length.");
+	var text_char = event.target.value[currLen-1];
+	console.log(text_char);
+	setChangedDoc(capture_character_input(currentDoc, text_char, currLen));
 	}
    else {
 	console.log("A character was deleted"); 
     }
     setTextLen(event.target.value.length);
+    () => { console.log(changedDoc) }
     event.preventDefault();
   };
+
+  const broadcastChange = () => {}; 
 
   /*
    * This function gets changes made on the
@@ -35,7 +41,8 @@ const SimpleEditor = (props: any) => {
 	   console.log(text);
    };
   useEffect(() => {
-    test_automerge();
+	setCurrentDoc(init_am_doc());
+	setChangedDoc(init_am_doc_text());
   });
   return (
     <div>
