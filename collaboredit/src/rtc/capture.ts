@@ -10,6 +10,20 @@ export function test_automerge() {
   });
   //const changes = Automerge.getChanges(currentDoc, newDoc);
 }
+export const test_automerge_text = () => {
+  //console.log("From inside test, ", textObj[Object.keys(textObj)[0]]);
+  const newDoc = Automerge.change(
+    Automerge.init(),
+    "first message",
+    (doc: any) => {
+      doc.text = new Automerge.Text();
+      doc.text.insertAt = (0, "h");
+      console.log(doc.text);
+    }
+  );
+  const changes = Automerge.getChanges(Automerge.init(), newDoc);
+  console.log(changes);
+};
 
 /*
  * This function is used as the way to initialize
@@ -17,27 +31,25 @@ export function test_automerge() {
  * empty document.
  */
 export const init_am_doc = () => {
- 	return Automerge.init();
-}
+  return Automerge.init();
+};
 
 // Do a new text document for automerge speed
 export const init_am_doc_text = () => {
-	return new Automerge.Text();
-}
+  return new Automerge.Text();
+};
 
 // Get the changes in state between the new document and the old one
 export const changes_am_doc = (oldDoc: any, newDoc: any) => {
-	console.log("Old", oldDoc);
-	console.log("New", newDoc);
-	return Automerge.getChanges(oldDoc, newDoc);
-}
+  return Automerge.getChanges(oldDoc, newDoc);
+};
 
 // Merge documents together and create one large document
 export const merge_am_doc = (oldDoc: any, newDoc: any) => {
-	console.log("Old", oldDoc);
-	console.log("New", newDoc);
-	return Automerge.merge(oldDoc, newDoc);
-}
+  console.log("Old", oldDoc);
+  console.log("New", newDoc);
+  return Automerge.merge(oldDoc, newDoc);
+};
 /*
  * This function takes in exactly one character
  * and then makes that change to the document. This is then
@@ -45,25 +57,33 @@ export const merge_am_doc = (oldDoc: any, newDoc: any) => {
  * timestamps are compared, and then a merge happens.
  *
  * Messages will be unique to the node that they are spawned from
- * and as a result will contain the ActorID as part of the signature. 
+ * and as a result will contain the ActorID as part of the signature.
  */
-export const capture_character_input = (currentDoc: any, textDoc: any, text_char: any) => {	
-	var msg = Automerge.getActorId(currentDoc) + " - add char " + text_char;
-	return Automerge.change(currentDoc, msg, (doc: any) => {
-		doc.text = textDoc;
-		doc.text.insertAt(0, text_char);
-	});
-}
+export const capture_character_input = (
+  currentDoc: any,
+  textDoc: any,
+  text_char: any
+) => {
+  const msg = Automerge.getActorId(currentDoc) + " - add char " + text_char;
+  return Automerge.change(currentDoc, msg, (doc: any) => {
+    doc.text = textDoc;
+    doc.text.insertAt(0, text_char);
+  });
+};
 
 /*
  * This function handles a change of deletion
  * of a character from the current form.
  */
-export const capture_character_delete = (currentDoc: any, textDoc: any, text_char: any) => {
-       var msg = Automerge.getActorId(currentDoc) + " - deleted char " + text_char;
-       return Automerge.change(currentDoc, msg, (doc: any) => {
-	       doc.text = textDoc;
-	       console.log(doc.text); 
-	       doc.text.deleteAt(0, text_char);
-       });
-}
+export const capture_character_delete = (
+  currentDoc: any,
+  textDoc: any,
+  text_char: any
+) => {
+  const msg = Automerge.getActorId(currentDoc) + " - deleted char " + text_char;
+  return Automerge.change(currentDoc, msg, (doc: any) => {
+    doc.text = textDoc;
+    console.log(doc.text);
+    doc.text.deleteAt(0, text_char);
+  });
+};
