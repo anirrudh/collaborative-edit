@@ -1,11 +1,11 @@
-import * as React from 'react';
+import * as React from "react";
 
-const serverPanel = (props) => {
-	return(
-	<div>
-		<p> server panel to go here </p>
-	</div>
-	);
-}
+const serverPanel = (props: any) => {
+  return (
+    <div>
+      <p> server panel to go here </p>
+    </div>
+  );
+};
 
 export default serverPanel;

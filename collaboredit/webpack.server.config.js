@@ -1,12 +1,15 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const nodeExternals = require('webpack-node-externals');
+
+
 module.exports = {
-  entry: './src/frontend/index.tsx',
+  target: 'node',
+  externals: [nodeExternals()],
+  entry: './src/rtc/index.ts',
   resolve: {
     alias: {
 	    'ws': path.resolve(path.join(__dirname, 'node_modules/ws/index.js' )) // fix for https://github.com/websockets/ws/issues/1538
   }},
-
   module: {
        rules: [
       {
@@ -24,11 +27,12 @@ module.exports = {
       },
     ],
   },
+
   resolve: {
     extensions: [ '.tsx', '.ts', '.js' ],
   },
   output: {
-    filename: 'bundle.js',
+    filename: 'server.js',
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/'
   },
@@ -40,13 +44,8 @@ module.exports = {
 	},
     },
     contentBase: path.join(__dirname, 'dist'),
-    port: 9000,
+    port: 8090,
     historyApiFallback: true,
     open: true
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: './src/frontend/index.html'
-    })
-  ]
- };
+   };
