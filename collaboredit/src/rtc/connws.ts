@@ -5,19 +5,17 @@ import { w3cwebsocket as W3CWebSocket } from "websocket";
  * to be exhanged.
  */
 
-const ws = new W3CWebSocket('ws://localhost:8090');
+const ws = new W3CWebSocket("ws://localhost:8090");
 
 export const sendCharChanges = (char_input_change) => {
-	console.log('Sending Char Changes...');
-  	ws.send(JSON.stringify(char_input_change));
+  console.log("Sending Char Changes...");
+  ws.send(JSON.stringify(char_input_change));
 };
 
 export const recieveChanges = () => {
-	var msg; 
-	ws.onmessage = (function incoming(data: any) {
-		msg = JSON.parse(data);
-	})
-	return msg;
+  let msg;
+  ws.onmessage = function incoming(data: any) {
+    msg = JSON.parse(data);
+  };
+  return msg;
 };
-
-

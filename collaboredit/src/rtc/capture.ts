@@ -1,4 +1,5 @@
 import * as Automerge from "automerge";
+
 export function test_automerge() {
   //const wss = new ws.Server({port: conf.wssPORT});
   const currentDoc = Automerge.init();
@@ -36,8 +37,8 @@ export const init_am_doc = () => {
 
 // Do a new text document for automerge speed
 export const init_am_doc_text = () => {
-  return Automerge.change(Automerge.init(),(doc:any) => {
-	  doc.text = new Automerge.Text();
+  return Automerge.change(Automerge.init(), (doc: any) => {
+    doc.text = new Automerge.Text();
   });
 };
 
@@ -55,8 +56,14 @@ export const merge_am_doc = (oldDoc: any, newDoc: any) => {
 
 // Get the document changes, and unpack the content of the document
 export const parse_am_doc = (currentDoc: any, changedDoc: any) => {
-	return Automerge.applyChanges(currentDoc, changedDoc);
+  return Automerge.applyChanges(currentDoc, changedDoc);
 };
+
+/*
+ * This function scans to the last known character
+ * and then makes the new changes for the next document
+ * forward.
+ */
 
 /*
  * This function takes in exactly one character
@@ -68,13 +75,15 @@ export const parse_am_doc = (currentDoc: any, changedDoc: any) => {
  * and as a result will contain the ActorID as part of the signature.
  */
 export const capture_character_input = (
-  currentDoc: any,
   textDoc: any,
-  text_char: any
+  text_char: any,
+  text_length: any
 ) => {
-  const msg = Automerge.getActorId(currentDoc) + " - add char " + text_char;
-  return Automerge.change(currentDoc, msg, (doc: any) => {
-    doc.text.insertAt(0, text_char);
+  console.log(text_char);
+  console.log("textDoc length: ", textDoc.text.toString().length);
+  const msg = Automerge.getActorId(textDoc) + " - add char " + text_char;
+  return Automerge.change(textDoc, msg, (doc: any) => {
+    doc.text.insertAt(text_length - 1, text_char);
   });
 };
 

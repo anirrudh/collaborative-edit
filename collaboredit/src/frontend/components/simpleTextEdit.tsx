@@ -12,14 +12,11 @@ import {
   test_automerge_text,
   parse_am_doc,
 } from "../../rtc/capture";
-import {
-	sendCharChanges,
-	recieveChanges
-} from "../../rtc/connws";
+import { sendCharChanges, recieveChanges } from "../../rtc/connws";
 import { Box, Button } from "rebass";
 import { Label, Textarea } from "@rebass/forms";
 
-const ws = new W3CWebSocket('ws://localhost:8090');
+const ws = new W3CWebSocket("ws://localhost:8090");
 
 const SimpleEditor = (props: any) => {
   const [text, setText] = useState(null);
@@ -41,27 +38,23 @@ const SimpleEditor = (props: any) => {
    * Recieve any incoming data on on open websocket port
    */
   const recieveCharChanges = (message: any) => {
-	  let changes = JSON.parse(message.data);
-	  console.log('changesss', changes);
-	  let newDoc = parse_am_doc(currentDoc, changes)
-	  console.log(newDoc);
-  }
+    const changes = JSON.parse(message.data);
+    const newDoc = parse_am_doc(changedDoc, changes);
+    setChangedDoc(newDoc);
+  };
 
   const handleText = (event: React.ChangeEvent) => {
-
     // Algo to check if charater was added or not
     const currLen = event.target.value.length;
     if (prevLen < currLen) {
       const text_char = event.target.value[currLen - 1];
-      const x = capture_character_input(currentDoc, changedDoc, text_char);
-      console.log(wsConnection);
+      const x = capture_character_input(changedDoc, text_char, currLen);
       broadcastChanges(x);
       setPrevLen(currLen);
     } else {
       console.log("A character was deleted");
     }
     setText(event.target.value);
-	  //  recieveCharChanges();
     event.preventDefault();
   };
 
@@ -74,7 +67,9 @@ const SimpleEditor = (props: any) => {
     console.log(text);
   };
   useEffect(() => {
-        ws.onmessage = ((data:any) => {recieveCharChanges(data)});
+    ws.onmessage = (data: any) => {
+      recieveCharChanges(data);
+    };
   });
   return (
     <div>
