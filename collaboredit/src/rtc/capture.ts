@@ -86,14 +86,13 @@ export const capture_character_input = (
  * of a character from the current form.
  */
 export const capture_character_delete = (
-  currentDoc: any,
   textDoc: any,
-  text_char: any
+  text_char: any,
+  text_length: any,
 ) => {
-  const msg = Automerge.getActorId(currentDoc) + " - deleted char " + text_char;
-  return Automerge.change(currentDoc, msg, (doc: any) => {
-    doc.text = textDoc;
-    console.log(doc.text);
-    doc.text.deleteAt(0, text_char);
+  const msg = Automerge.getActorId(textDoc) + " - deleted chars " + text_char;
+  console.log(text_char, text_length);
+  return Automerge.change(textDoc, msg, (doc: any) => {
+    doc.text.deleteAt(text_length);
   });
 };

@@ -12,7 +12,6 @@ import {
   test_automerge_text,
   parse_am_doc,
 } from "../../rtc/capture";
-import { sendCharChanges, recieveChanges } from "../../rtc/connws";
 import { Box, Button } from "rebass";
 import { Label, Textarea } from "@rebass/forms";
 
@@ -30,7 +29,6 @@ const SimpleEditor = (props: any) => {
    */
   const broadcastChanges = (x: any) => {
     const f = changes_am_doc(currentDoc, x);
-    console.log("changes made -> :", f);
     ws.send(JSON.stringify(f));
   };
 
@@ -38,25 +36,26 @@ const SimpleEditor = (props: any) => {
    * Recieve any incoming data on on open websocket port
    */
   const recieveCharChanges = (message: any) => {
-    console.log("Recieving changes!");
-    const changes = JSON.parse(message.data);
-    const newDoc = parse_am_doc(changedDoc, changes);
+    let changes = JSON.parse(message.data);
+    let newDoc = parse_am_doc(changedDoc, changes);
     setChangedDoc(newDoc);
-    console.log(newDoc.text.toString());
   };
 
   const handleText = (event: React.ChangeEvent) => {
-    // Algo to check if charater was added or not
+    // Algo to check if character was added or not
     const currLen = event.target.value.length;
+    console.log("Current length: ", currLen);
     if (prevLen < currLen) {
       const text_char = event.target.value[currLen - 1];
       const x = capture_character_input(changedDoc, text_char, currLen);
       broadcastChanges(x);
       setPrevLen(currLen);
     } else {
-      console.log("A character was deleted");
+      let text_char = text[text.length - 1]
+      const x = capture_character_delete(changedDoc, text_char, currLen); 
+      broadcastChanges(x); 
+      setPrevLen(currLen - 1);
     }
-	  //setText(event.target.value);
     event.preventDefault();
   };
 
@@ -70,11 +69,9 @@ const SimpleEditor = (props: any) => {
   };
   useEffect(() => {
     ws.onmessage = (message: any) => {
-    const changes = JSON.parse(message.data);
-    const newDoc = parse_am_doc(changedDoc, changes);
+    let changes = JSON.parse(message.data);
+    let newDoc = parse_am_doc(changedDoc, changes);
     setChangedDoc(newDoc);
-    console.log("recieving changes");
-    console.log(newDoc.text.toString());
     setText(newDoc.text.toString());
     };
   });
@@ -82,7 +79,7 @@ const SimpleEditor = (props: any) => {
     <div>
       <Box p={5} fontSize={4}>
         <Label htmlFor="comment">Collaboration Text Area</Label>
-        <Textarea id="comment" name="comment" onChange={handleText} value={text} />
+		<Textarea id="comment" name="comment" onChange={handleText} value={text} />
         <br />
         <Button variant="primary" mr={2} onClick={handleGetChangesHost}>
           {" "}
