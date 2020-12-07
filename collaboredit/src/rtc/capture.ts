@@ -36,7 +36,9 @@ export const init_am_doc = () => {
 
 // Do a new text document for automerge speed
 export const init_am_doc_text = () => {
-  return new Automerge.Text();
+  return Automerge.change(Automerge.init(),(doc:any) => {
+	  doc.text = new Automerge.Text();
+  });
 };
 
 // Get the changes in state between the new document and the old one
@@ -50,6 +52,12 @@ export const merge_am_doc = (oldDoc: any, newDoc: any) => {
   console.log("New", newDoc);
   return Automerge.merge(oldDoc, newDoc);
 };
+
+// Get the document changes, and unpack the content of the document
+export const parse_am_doc = (currentDoc: any, changedDoc: any) => {
+	return Automerge.applyChanges(currentDoc, changedDoc);
+};
+
 /*
  * This function takes in exactly one character
  * and then makes that change to the document. This is then
@@ -66,7 +74,6 @@ export const capture_character_input = (
 ) => {
   const msg = Automerge.getActorId(currentDoc) + " - add char " + text_char;
   return Automerge.change(currentDoc, msg, (doc: any) => {
-    doc.text = textDoc;
     doc.text.insertAt(0, text_char);
   });
 };
