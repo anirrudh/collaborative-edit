@@ -60,12 +60,6 @@ export const parse_am_doc = (currentDoc: any, changedDoc: any) => {
 };
 
 /*
- * This function scans to the last known character
- * and then makes the new changes for the next document
- * forward.
- */
-
-/*
  * This function takes in exactly one character
  * and then makes that change to the document. This is then
  * sent instantly as a change that is made to the document,

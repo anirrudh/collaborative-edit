@@ -19,7 +19,7 @@ import { Label, Textarea } from "@rebass/forms";
 const ws = new W3CWebSocket("ws://localhost:8090");
 
 const SimpleEditor = (props: any) => {
-  const [text, setText] = useState(null);
+  const [text, setText] = useState('');
   const [prevLen, setPrevLen] = useState(0); // The last length of an unmodified change
   const [currentDoc, setCurrentDoc] = useState(init_am_doc()); // Current Doc (refactor out)
   const [changedDoc, setChangedDoc] = useState(init_am_doc_text()); // Doc compiled with changes
@@ -38,9 +38,11 @@ const SimpleEditor = (props: any) => {
    * Recieve any incoming data on on open websocket port
    */
   const recieveCharChanges = (message: any) => {
+    console.log("Recieving changes!");
     const changes = JSON.parse(message.data);
     const newDoc = parse_am_doc(changedDoc, changes);
     setChangedDoc(newDoc);
+    console.log(newDoc.text.toString());
   };
 
   const handleText = (event: React.ChangeEvent) => {
@@ -54,7 +56,7 @@ const SimpleEditor = (props: any) => {
     } else {
       console.log("A character was deleted");
     }
-    setText(event.target.value);
+	  //setText(event.target.value);
     event.preventDefault();
   };
 
@@ -67,15 +69,20 @@ const SimpleEditor = (props: any) => {
     console.log(text);
   };
   useEffect(() => {
-    ws.onmessage = (data: any) => {
-      recieveCharChanges(data);
+    ws.onmessage = (message: any) => {
+    const changes = JSON.parse(message.data);
+    const newDoc = parse_am_doc(changedDoc, changes);
+    setChangedDoc(newDoc);
+    console.log("recieving changes");
+    console.log(newDoc.text.toString());
+    setText(newDoc.text.toString());
     };
   });
   return (
     <div>
       <Box p={5} fontSize={4}>
         <Label htmlFor="comment">Collaboration Text Area</Label>
-        <Textarea id="comment" name="comment" onChange={handleText} />
+        <Textarea id="comment" name="comment" onChange={handleText} value={text} />
         <br />
         <Button variant="primary" mr={2} onClick={handleGetChangesHost}>
           {" "}
