@@ -23,6 +23,7 @@ const SimpleEditor = (props: any) => {
   const [currentDoc, setCurrentDoc] = useState(init_am_doc()); // Current Doc (refactor out)
   const [changedDoc, setChangedDoc] = useState(init_am_doc_text()); // Doc compiled with changes
   const [wsConnection, setWsConnection] = useState(ws);
+  const [selectedText, setSelectedText] = useState('');
 
   /*
    * Broadacast any incoming changes using websockets
@@ -43,6 +44,7 @@ const SimpleEditor = (props: any) => {
 
   const handleText = (event: React.ChangeEvent) => {
     // Algo to check if character was added or not
+    console.log("event outcome", event.target.value);
     const currLen = event.target.value.length;
     console.log("Current length: ", currLen);
     if (prevLen < currLen) {
@@ -51,14 +53,30 @@ const SimpleEditor = (props: any) => {
       broadcastChanges(x);
       setPrevLen(currLen);
     } else {
-      let text_char = text[text.length - 1]
-      const x = capture_character_delete(changedDoc, text_char, currLen); 
-      broadcastChanges(x); 
-      setPrevLen(currLen - 1);
+      let chars_to_delete = prevLen - currLen; // chars to delete
+      console.log(chars_to_delete);
+      console.log(event);
+      
+      setPrevLen(prevLen - chars_to_delete);
     }
     event.preventDefault();
   };
 
+	const handleSelectedText = (event: any) => {
+		//console.log(event);
+		//console.log(event.target.selectionEnd, event.target.selectionStart, event.target.textLength);
+	let selected_chars: string = (event.target.value.substring(
+		event.target.selectionStart, event.target.selectionEnd));
+		// Create an object that has { `selected char` : `index it exists at` }
+		let char_arr = [...selected_chars];
+		// thankkkk you https://stackoverflow.com/questions/3895478/does-javascript-have-a-method-like-range-to-generate-a-range-within-the-supp
+		function range(size:number, startAt:number = 0):ReadonlyArray<number> {
+		    return [...Array(size).keys()].map(i => i + startAt);
+		}
+		// TODO: above, technically if I know the first elemnt start at and the size, I know the indicies selected. 
+		let char_arr_ind = range(char_arr.length, event.target.selectionStart));
+		setSelectedText(
+  }
   /*
    * This function gets changes made on the
    * current host machine and displays the
@@ -79,7 +97,7 @@ const SimpleEditor = (props: any) => {
     <div>
       <Box p={5} fontSize={4}>
         <Label htmlFor="comment">Collaboration Text Area</Label>
-		<Textarea id="comment" name="comment" onChange={handleText} value={text} />
+		<Textarea id="comment" name="comment" onChange={handleText} onMouseUp={handleSelectedText} value={text} />
         <br />
         <Button variant="primary" mr={2} onClick={handleGetChangesHost}>
           {" "}
